@@ -3,6 +3,11 @@ import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { configDotenv } from "dotenv";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { check, validationResult } from "express-validator";
+
+import UserModel from "./models/UserModel.js";
 
 const app = express();
 configDotenv();

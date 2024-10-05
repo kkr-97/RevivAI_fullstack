@@ -9,6 +9,9 @@ import { check, validationResult } from "express-validator";
 
 import UserModel from "./models/UserModel.js";
 
+import sentimentAnalyze from "./operations/sentimentAnalyse.js";
+import summarizeJournal from "./operations/summarizeJournal.js";
+
 const app = express();
 configDotenv();
 
@@ -91,6 +94,25 @@ app.post(
     }
   }
 );
+
+app.post("/create-journal", async (req, res) => {
+  const { userId, date, mood, dayType, journal } = req.body;
+
+  try {
+    const summary = await summarizeJournal(
+      journal,
+      process.env.HUGGINGFACE_TOKEN
+    );
+    const result = await sentimentAnalyze(
+      summary,
+      process.env.HUGGINGFACE_TOKEN
+    );
+
+    res.status(200).json({ summary, ...result });
+  } catch (e) {
+    console.error("Error while Summarizing:", e);
+  }
+});
 
 app.get("/", async (req, res) => {
   res.send("Server Activated");

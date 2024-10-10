@@ -79,7 +79,7 @@ app.post(
       const { email, password } = req.body;
       const user = await UserModel.findOne({ email });
       if (!user) {
-        return res.status(401).json({ message: "No User Find!!" });
+        return res.status(401).json({ message: "No User Found!!" });
       }
       const isValidPass = await bcrypt.compare(password, user.passwordHash);
       if (!isValidPass) {

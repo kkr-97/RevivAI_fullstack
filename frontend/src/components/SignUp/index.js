@@ -157,7 +157,7 @@ function SignUp() {
               {msg.length > 0 ? (
                 <p
                   className={
-                    "down m-0 text-small " +
+                    "m-0 text-small " +
                     (signInStatus === status.success
                       ? "text-success"
                       : "text-danger")

@@ -11,3 +11,54 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+*{
+  box-sizing: border-box;
+  margin:0;
+}
+
+/* .Navbar Styling */
+
+.navbar-nav li {
+  margin-left: 26px;
+}
+
+.nav-link.active {
+  color: #ffe600 !important;
+}
+
+.nav-link.active:hover {
+  color: #ffe600; 
+}
+
+.navbar-toggler{
+  border: none;
+  margin-left: 5px;
+}
+
+.drop-down{
+  position: absolute;
+  border-radius: 4px;
+  top:40px;
+  right: -10px;
+}
+
+@media (max-width: 767px){
+  .drop-down{
+    right: 0;
+  }
+}
+
+.rotate-arrow {
+  transition: transform 0.4s ease-in-out;
+  perspective: 1000px;
+  position: relative;
+}
+
+.up {
+  transform: rotateX(0deg);
+}
+
+.down {
+  transform: rotateX(180deg);
+}

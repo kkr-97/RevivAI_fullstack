@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: white;
+  height: 100vh;
 }
 
 code {
@@ -24,11 +26,11 @@ code {
 }
 
 .nav-link.active {
-  color: #ffe600 !important;
+  color: #fcc135 !important;
 }
 
-.nav-link.active:hover {
-  color: #ffe600; 
+.nav-link:hover {
+  color: #ffe60090 !important;
 }
 
 .navbar-toggler{

@@ -54,7 +54,7 @@ function Navbar() {
         ></i>
       </div>
       {isDropDownOpen && (
-        <div className="drop-down bg-light p-3">
+        <div className="drop-down bg-secondary p-3">
           <h5 className="d-flex align-items-center profile-name border-bottom py-2">
             <img
               src="/assets/images/hello.png"
@@ -73,7 +73,7 @@ function Navbar() {
   );
 
   return (
-    <nav className="navbar navbar-expand-md bg-white border-bottom p-2 mb-5">
+    <nav className="navbar navbar-expand-md bg-dark navbar-dark border-bottom border-secondary p-2 mb-4">
       <div className="container">
         <NavLink className="navbar-brand" to="/">
           {/* <img
@@ -82,7 +82,7 @@ function Navbar() {
             className="nav-logo"
             style={{ width: "150px" }} // Adjust the width as needed
           /> */}
-          RevivAI
+          Reviva
         </NavLink>
 
         <div

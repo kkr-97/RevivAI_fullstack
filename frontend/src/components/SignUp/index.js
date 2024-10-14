@@ -87,7 +87,7 @@ function SignUp() {
       <div className="row">
         <div className="col-md-6 sign-up-left d-flex align-items-center justify-content-center">
           <h1 className="m-auto align-self-center">
-            RevivAI - Track your Moments
+            Reviva - Track your Moments
           </h1>
         </div>
         <div

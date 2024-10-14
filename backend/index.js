@@ -89,7 +89,14 @@ app.post(
         expiresIn: 360000,
       });
       console.log("Login Successful!");
-      res.status(200).json({ message: "Login Successful", token });
+      res
+        .status(200)
+        .json({
+          username: user.username,
+          id: user._id,
+          message: "Login Successful",
+          token,
+        });
     } catch (e) {
       console.error("Login Error: ", e);
       res.status(500).json({ message: e });

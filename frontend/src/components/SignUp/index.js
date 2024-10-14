@@ -3,6 +3,9 @@ import axios from "axios";
 import Cookie from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
+import { useDispatch } from "react-redux";
+import { onSuccessfulLogin } from "../../store/userSlice";
+
 import "./index.css";
 
 const status = {
@@ -22,6 +25,7 @@ function SignUp() {
   const [passwordState, setPasswordState] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const token = Cookie.get("reviva-token");
 
@@ -48,6 +52,12 @@ function SignUp() {
         password,
       });
       Cookie.set("reviva-token", response.data.token);
+      dispatch(
+        onSuccessfulLogin({
+          username: response.data.username,
+          userId: response.data.id,
+        })
+      );
       setMsg(response.data.message);
       setSignInStatus(status.success);
       navigate("/");
@@ -68,6 +78,12 @@ function SignUp() {
         password,
       });
       Cookie.set("reviva-token", response.data.token);
+      dispatch(
+        onSuccessfulLogin({
+          username: response.data.username,
+          userId: response.data.id,
+        })
+      );
       setMsg(response.data.message);
       setSignInStatus(status.success);
       navigate("/");

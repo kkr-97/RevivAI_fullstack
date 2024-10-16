@@ -1,25 +1,22 @@
-import axios from "axios";
+import vader from "vader-sentiment";
 
-async function sentimentAnalyze(text, hgFaceToken) {
-  const API_URL =
-    "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english";
-  const headers = {
-    Authorization: `Bearer ${hgFaceToken}`,
-  };
-
+async function sentimentAnalyze(text) {
   try {
-    const response = await axios.post(
-      API_URL,
-      {
-        inputs: text,
-      },
-      { headers }
+    const intensity = await vader.SentimentIntensityAnalyzer.polarity_scores(
+      text
     );
-    const result = response.data[0][0];
-    return result;
+
+    const { pos, neg, neu } = intensity;
+
+    if (neu > pos && neu > neg) {
+      return { label: "Neutral", score: neu };
+    } else if (pos > neg) {
+      return { label: "Positive", score: pos };
+    }
+    return { label: "Negative", score: neg };
   } catch (error) {
     console.error("Error analyzing sentiment:", error);
-    return null;
+    throw new Error(`Error analyzing sentiment: ${error.message || error}`);
   }
 }
 

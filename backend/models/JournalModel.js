@@ -1,4 +1,6 @@
-import { Model } from "mongoose";
-import JournalSchema from "../schemas/JournalSchema";
+import { model } from "mongoose";
+import JournalSchema from "../schemas/JournalSchema.js";
 
-export default new Model("journal", JournalSchema);
+const JournalModel = new model("journal", JournalSchema);
+
+export default JournalModel;

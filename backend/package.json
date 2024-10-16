@@ -11,6 +11,8 @@
   "author": "keerthan reddy kolli",
   "license": "ISC",
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
+    "@huggingface/inference": "^2.8.1",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
@@ -19,7 +21,8 @@
     "express": "^4.21.0",
     "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.7.0"
+    "mongoose": "^8.7.0",
+    "vader-sentiment": "^1.1.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"

@@ -10,9 +10,9 @@ import "./index.css";
 
 const status = {
   initial: "INITIAL",
-  loading: "fetching Details...",
+  loading: "FETCHING DETAILS...",
   success: "SUCCESS",
-  failed: "Failed",
+  failed: "FAILED",
 };
 
 function SignUp() {
@@ -31,9 +31,24 @@ function SignUp() {
 
   useEffect(() => {
     if (token) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
   }, [navigate, token]);
+
+  const onSuccessfulSignIn = ({ username, token, userId, message }) => {
+    Cookie.set("reviva-token", token, { expires: 1 });
+    Cookie.set("reviva-username", username, { expires: 1 });
+    Cookie.set("reviva-userid", userId, { expires: 1 });
+    dispatch(
+      onSuccessfulLogin({
+        username: username,
+        userId: userId,
+      })
+    );
+    setMsg(message);
+    setSignInStatus(status.success);
+    navigate("/");
+  };
 
   const toggleForm = () => {
     setUsername("");
@@ -51,16 +66,12 @@ function SignUp() {
         email,
         password,
       });
-      Cookie.set("reviva-token", response.data.token);
-      dispatch(
-        onSuccessfulLogin({
-          username: response.data.username,
-          userId: response.data.id,
-        })
-      );
-      setMsg(response.data.message);
-      setSignInStatus(status.success);
-      navigate("/");
+      onSuccessfulSignIn({
+        token: response.data.token,
+        username: response.data.username,
+        userId: response.data.id,
+        message: response.data.message,
+      });
     } catch (e) {
       console.log("Error: ", e);
       setSignInStatus(status.failed);
@@ -77,16 +88,12 @@ function SignUp() {
         username,
         password,
       });
-      Cookie.set("reviva-token", response.data.token);
-      dispatch(
-        onSuccessfulLogin({
-          username: response.data.username,
-          userId: response.data.id,
-        })
-      );
-      setMsg(response.data.message);
-      setSignInStatus(status.success);
-      navigate("/");
+      onSuccessfulSignIn({
+        token: response.data.token,
+        username: response.data.username,
+        userId: response.data.id,
+        message: response.data.message,
+      });
     } catch (e) {
       console.log("Error: ", e);
       setSignInStatus(status.failed);

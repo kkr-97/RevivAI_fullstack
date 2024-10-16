@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import Cookie from "js-cookie";
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    username: "",
-    userId: "",
+    username: Cookie.get("reviva-username"),
+    userId: Cookie.get("reviva-userid"),
   },
 
   reducers: {

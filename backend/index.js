@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import { check, validationResult } from "express-validator";
 
 import UserModel from "./models/UserModel.js";
+import JournalModel from "./models/JournalModel.js";
 
 import sentimentAnalyze from "./operations/sentimentAnalyse.js";
 import summarizeJournal from "./operations/summarizeJournal.js";
@@ -89,14 +90,12 @@ app.post(
         expiresIn: 360000,
       });
       console.log("Login Successful!");
-      res
-        .status(200)
-        .json({
-          username: user.username,
-          id: user._id,
-          message: "Login Successful",
-          token,
-        });
+      res.status(200).json({
+        username: user.username,
+        id: user._id,
+        message: "Login Successful",
+        token,
+      });
     } catch (e) {
       console.error("Login Error: ", e);
       res.status(500).json({ message: e });
@@ -105,26 +104,36 @@ app.post(
 );
 
 app.post("/create-journal", async (req, res) => {
-  const { userId, date, mood, dayType, journal } = req.body;
+  const { userId, date, dayType, journal } = req.body;
 
   try {
-    const summary = await summarizeJournal(
-      journal,
-      process.env.HUGGINGFACE_TOKEN
-    );
+    const summary = await summarizeJournal(journal);
     const result = await sentimentAnalyze(
       summary,
       process.env.HUGGINGFACE_TOKEN
     );
 
+    const journalEntry = new JournalModel({
+      userId,
+      date,
+      dayType,
+      journal,
+      emotions: {
+        ...result,
+        summary,
+      },
+    });
+    await journalEntry.save();
+    console.log("Journal Created!");
     res.status(200).json({ summary, ...result });
   } catch (e) {
-    console.error("Error while Summarizing:", e);
+    console.log(e);
+    res.status(500).json({ message: "Try Submitting again!!" });
   }
 });
 
 app.get("/", async (req, res) => {
-  res.send("Server Activated");
+  res.send("Reviva - Server Activated");
 });
 
 const connectDB = async () => {

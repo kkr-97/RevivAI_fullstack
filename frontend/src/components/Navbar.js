@@ -48,7 +48,7 @@ function Navbar() {
           className="rounded-circle text-white m-0 mx-1 d-flex align-items-center justify-content-center p-2 bg-secondary"
           style={{ width: "30px", height: "30px" }}
         >
-          {userName[0].toUpperCase()}
+          {userName[0]?.toUpperCase()}
         </p>
         <i
           className={

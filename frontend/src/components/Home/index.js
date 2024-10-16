@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import axios from "axios";
+
 import "./index.css";
 
 const dayTypes = [
@@ -10,10 +12,17 @@ const dayTypes = [
   { type: "Not Able to know", icon: "❔" },
 ];
 
+const journalStatus = {
+  initial: "INITIAL",
+  submitting: "SUBMITTING",
+  submitted: "SUBMITTED",
+};
+
 function Home() {
   const [date, setDate] = useState(new Date());
   const [journal, setJournal] = useState("");
-  const [verdict, setVerdict] = useState("");
+  const [dayType, setVerdict] = useState("");
+  const [status, setStatus] = useState(journalStatus.initial);
 
   const username = useSelector((state) => state.user.username);
   const userId = useSelector((state) => state.user.userId);
@@ -22,7 +31,19 @@ function Home() {
   const onChangeJournal = (e) => setJournal(e.target.value);
   const onChangeVerdict = (e) => setVerdict(e.target.value);
 
-  const submitJournal = () => {};
+  const submitJournal = async (e) => {
+    e.preventDefault();
+
+    await axios
+      .post("http://localhost:3001/create-journal", {
+        userId,
+        date,
+        dayType,
+        journal,
+      })
+      .then((res) => console.log(res.data))
+      .catch((e) => console.error(e.response.data.message));
+  };
 
   return (
     <div className="container">
@@ -31,7 +52,10 @@ function Home() {
           <h2 className="main-head ">
             👋 Hello {username}!, how's your day...
           </h2>
-          <div className="journal-container bg-light bg-gradient">
+          <form
+            onSubmit={submitJournal}
+            className="journal-container bg-light bg-gradient"
+          >
             <div className="header-container pb-2">
               <div className="input-container date-container form-group">
                 <label htmlFor="journal_input_date">Date</label>
@@ -45,14 +69,14 @@ function Home() {
                 />
               </div>
               <div className="input-container type-container from-group">
-                <label htmlFor="verdict">Verdict of the Day</label>
+                <label htmlFor="dayType">Verdict of the Day</label>
                 <select
-                  id="verdict"
+                  id="dayType"
                   className="form-control"
                   onChange={onChangeVerdict}
-                  value={verdict}
+                  value={dayType}
                 >
-                  <option disabled>Select your verdict of the day</option>
+                  <option disabled>Select your dayType of the day</option>
                   {dayTypes.map((dayType, index) => (
                     <option key={index} value={dayType.type}>
                       {dayType.icon} {dayType.type}{" "}
@@ -69,13 +93,10 @@ function Home() {
                 className="flex-grow-1 form-control"
               ></textarea>
             </div>
-            <button
-              onClick={submitJournal}
-              className="btn btn-warning submit-btn"
-            >
+            <button type="submit" className="btn btn-warning submit-btn">
               Submit
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>

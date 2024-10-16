@@ -1,28 +1,31 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import swal from "sweetalert";
 
 import "./index.css";
 
 const dayTypes = [
   { type: "Happy", icon: "😊" },
   { type: "Stressed", icon: "🤯" },
+  { type: "Average", icon: "😐" },
   { type: "Sad", icon: "🥺" },
   { type: "Angry", icon: "😠" },
   { type: "Not Able to know", icon: "❔" },
 ];
 
-const journalStatus = {
+const status = {
   initial: "INITIAL",
   submitting: "SUBMITTING",
   submitted: "SUBMITTED",
+  failed: "FAILED",
 };
 
 function Home() {
   const [date, setDate] = useState(new Date());
   const [journal, setJournal] = useState("");
-  const [dayType, setVerdict] = useState("");
-  const [status, setStatus] = useState(journalStatus.initial);
+  const [dayType, setVerdict] = useState(dayTypes[0]);
+  const [journalStatus, setJournalStatus] = useState(status.initial);
 
   const username = useSelector((state) => state.user.username);
   const userId = useSelector((state) => state.user.userId);
@@ -34,6 +37,8 @@ function Home() {
   const submitJournal = async (e) => {
     e.preventDefault();
 
+    setJournalStatus(status.submitting);
+
     await axios
       .post("http://localhost:3001/create-journal", {
         userId,
@@ -41,8 +46,20 @@ function Home() {
         dayType,
         journal,
       })
-      .then((res) => console.log(res.data))
-      .catch((e) => console.error(e.response.data.message));
+      .then((res) => {
+        const analysis = res.data.aiFeedback;
+
+        swal("👇Feedback from Reviva👇", analysis, "success");
+        // console.log(res.data);
+      })
+      .catch((err) => {
+        swal(
+          "Oops!",
+          err?.response?.data?.message || "Error while submitting!",
+          "error"
+        );
+        console.error(err?.response?.data?.message);
+      });
   };
 
   return (
@@ -50,7 +67,8 @@ function Home() {
       <div className="row">
         <div className="col">
           <h2 className="main-head ">
-            👋 Hello {username}!, how's your day...
+            Hello👋, {username}! <br />
+            how's your day...
           </h2>
           <form
             onSubmit={submitJournal}
@@ -76,7 +94,7 @@ function Home() {
                   onChange={onChangeVerdict}
                   value={dayType}
                 >
-                  <option disabled>Select your dayType of the day</option>
+                  <option disabled>Select type of the day</option>
                   {dayTypes.map((dayType, index) => (
                     <option key={index} value={dayType.type}>
                       {dayType.icon} {dayType.type}{" "}

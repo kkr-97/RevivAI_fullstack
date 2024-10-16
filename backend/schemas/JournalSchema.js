@@ -1,14 +1,16 @@
-import mongoose, { Schema } from "mongoose";
+import { Schema } from "mongoose";
 
 const JournalSchema = new Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
+  userId: { type: String, ref: "user", required: true },
   date: { type: String, required: true },
   dayType: { type: String, required: true },
   journal: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   emotions: {
-    label: { type: String, required: true },
-    score: { type: Number, required: true },
+    positive: { type: Number, required: true },
+    neutral: { type: Number, required: true },
+    negative: { type: Number, required: true },
+    aiFeedback: { type: String, required: true },
     summary: { type: String },
   },
 });

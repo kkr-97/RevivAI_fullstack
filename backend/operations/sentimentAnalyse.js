@@ -8,12 +8,7 @@ async function sentimentAnalyze(text) {
 
     const { pos, neg, neu } = intensity;
 
-    if (neu > pos && neu > neg) {
-      return { label: "Neutral", score: neu };
-    } else if (pos > neg) {
-      return { label: "Positive", score: pos };
-    }
-    return { label: "Negative", score: neg };
+    return { positive: pos, negative: neg, neutral: neu };
   } catch (error) {
     console.error("Error analyzing sentiment:", error);
     throw new Error(`Error analyzing sentiment: ${error.message || error}`);

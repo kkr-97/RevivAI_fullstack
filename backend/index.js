@@ -12,6 +12,7 @@ import JournalModel from "./models/JournalModel.js";
 
 import sentimentAnalyze from "./operations/sentimentAnalyse.js";
 import summarizeJournal from "./operations/summarizeJournal.js";
+import getFeedback from "./operations/getFeedback.js";
 
 const app = express();
 configDotenv();
@@ -112,6 +113,7 @@ app.post("/create-journal", async (req, res) => {
       summary,
       process.env.HUGGINGFACE_TOKEN
     );
+    const aiFeedback = await getFeedback(dayType, summary);
 
     const journalEntry = new JournalModel({
       userId,
@@ -120,15 +122,27 @@ app.post("/create-journal", async (req, res) => {
       journal,
       emotions: {
         ...result,
+        aiFeedback,
         summary,
       },
     });
     await journalEntry.save();
     console.log("Journal Created!");
-    res.status(200).json({ summary, ...result });
+    res.status(200).json({ ...journalEntry.emotions });
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: "Try Submitting again!!" });
+  }
+});
+
+app.get("/journal-items/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const journalItems = await JournalModel.find({ userId: userId }, {});
+    res.status(200).json({ journalItems });
+    console.log("Journal Items Sent Successfully");
+  } catch (err) {
+    console.error("Error while retrieving journals: ", err);
   }
 });
 

@@ -1,8 +1,10 @@
 import ProgressBar from "@ramonak/react-progress-bar";
+import { Link } from "react-router-dom";
+
 import "./index.css";
 
 function JournalItem({ details }) {
-  const { date, dayType, emotions } = details;
+  const { date, dayType, emotions, _id } = details;
   const { positive, negative, neutral, summary } = emotions;
 
   const newDate = new Date(date);
@@ -17,12 +19,12 @@ function JournalItem({ details }) {
         </p>
       </div>
       <div className="journal-label-mood-container">
-        <div className="d-flex flex-column w-50">
+        <div className="d-flex flex-column w-75">
           <p className="mb-1">
             <b>Day Type: </b>
             {dayType}
           </p>
-          <p className="mt-1 mb-0 d-flex align-items-center">
+          <div className="mt-1 mb-0 d-flex align-items-center">
             <small>
               <b>Positive</b>
             </small>{" "}
@@ -32,8 +34,8 @@ function JournalItem({ details }) {
               completed={(positive * 100).toFixed()}
               className="flex-grow-1 ms-2"
             />
-          </p>
-          <p className="mb-0 d-flex align-items-center">
+          </div>
+          <div className="mb-0 d-flex align-items-center">
             <small>
               <b>Neutral</b>
             </small>{" "}
@@ -43,8 +45,8 @@ function JournalItem({ details }) {
               completed={(neutral * 100).toFixed()}
               className="flex-grow-1 ms-2"
             />
-          </p>
-          <p className="mb-2 d-flex align-items-center">
+          </div>
+          <div className="mb-2 d-flex align-items-center">
             <small>
               <b>Negative</b>
             </small>{" "}
@@ -54,14 +56,19 @@ function JournalItem({ details }) {
               completed={(negative * 100).toFixed()}
               className="flex-grow-1 ms-2"
             />
-          </p>
+          </div>
         </div>
         <p className="journal-summary mb-0">
           <b>Summary: </b>
           {summary}
         </p>
       </div>
-      <button className="btn btn-warning flex-grow ms-auto">View</button>
+      <Link
+        to={`/journal/${_id}`}
+        className="btn btn-warning flex-grow ms-auto"
+      >
+        View
+      </Link>
     </li>
   );
 }

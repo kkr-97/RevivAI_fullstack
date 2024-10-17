@@ -12,6 +12,7 @@ import Navbar from "./components/Navbar";
 
 import { Provider } from "react-redux";
 import store from "./store/store";
+import DetailJournalPage from "./components/DetailJournalPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -30,6 +31,10 @@ root.render(
                     <Route path="/" element={<Home />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/stats" element={<Stats />} />
+                    <Route
+                      path="/journal/:id"
+                      element={<DetailJournalPage />}
+                    />
                     <Route path="*" element={<NotFound />} />
                   </Route>
                 </Routes>

@@ -1,21 +1,15 @@
-import axios from "axios";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-async function summarizeJournal(journalText, hgFaceToken) {
-  const API_URL =
-    "https://api-inference.huggingface.co/models/sshleifer/distilbart-cnn-12-6";
-  const headers = {
-    Authorization: `Bearer ${hgFaceToken}`,
-  };
-
+async function summarizeJournal(journalText) {
   try {
-    const response = await axios.post(
-      API_URL,
-      {
-        inputs: journalText,
-      },
-      { headers }
-    );
-    return response.data[0].summary_text;
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `Summarize the given journal in a very empathtic way being the first person, place the accomplishments of that day at first and summary should not be more than 2 lines: ${journalText}`;
+
+    const result = await model.generateContent(prompt);
+
+    return result.response.text();
   } catch (error) {
     console.error("Error summarizing the journal:", error);
     return null;

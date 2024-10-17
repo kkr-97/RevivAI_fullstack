@@ -8,9 +8,11 @@ import jwt from "jsonwebtoken";
 import { check, validationResult } from "express-validator";
 
 import UserModel from "./models/UserModel.js";
+import JournalModel from "./models/JournalModel.js";
 
 import sentimentAnalyze from "./operations/sentimentAnalyse.js";
 import summarizeJournal from "./operations/summarizeJournal.js";
+import getFeedback from "./operations/getFeedback.js";
 
 const app = express();
 configDotenv();
@@ -89,7 +91,12 @@ app.post(
         expiresIn: 360000,
       });
       console.log("Login Successful!");
-      res.status(200).json({ message: "Login Successful", token });
+      res.status(200).json({
+        username: user.username,
+        id: user._id,
+        message: "Login Successful",
+        token,
+      });
     } catch (e) {
       console.error("Login Error: ", e);
       res.status(500).json({ message: e });
@@ -98,26 +105,68 @@ app.post(
 );
 
 app.post("/create-journal", async (req, res) => {
-  const { userId, date, mood, dayType, journal } = req.body;
+  const { userId, date, dayType, journal } = req.body;
 
   try {
-    const summary = await summarizeJournal(
-      journal,
-      process.env.HUGGINGFACE_TOKEN
-    );
+    const summary = await summarizeJournal(journal);
     const result = await sentimentAnalyze(
       summary,
       process.env.HUGGINGFACE_TOKEN
     );
+    const aiFeedback = await getFeedback(dayType, summary);
 
-    res.status(200).json({ summary, ...result });
+    const journalEntry = new JournalModel({
+      userId,
+      date,
+      dayType,
+      journal,
+      emotions: {
+        ...result,
+        aiFeedback,
+        summary,
+      },
+    });
+    await journalEntry.save();
+    console.log("Journal Created!");
+    res.status(200).json({ ...journalEntry.emotions });
   } catch (e) {
-    console.error("Error while Summarizing:", e);
+    console.log(e);
+    res.status(500).json({ message: "Try Submitting again!!" });
+  }
+});
+
+app.get("/journal-items/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const journalItems = await JournalModel.find({ userId: userId }, {});
+    res.status(200).json({ journalItems });
+    console.log("Journal Items Sent Successfully");
+  } catch (err) {
+    console.error("Error while retrieving journals: ", err);
+  }
+});
+
+app.get("/journal/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const journal = await JournalModel.findOne({
+      _id: new mongoose.Types.ObjectId(id),
+    });
+    if (!journal) {
+      res.status(404).json({ message: "Journal not found!" });
+    } else {
+      res.status(200).json({ journal });
+    }
+  } catch (err) {
+    console.error("Error while retrieving journal: ", err);
+    res
+      .status(500)
+      .json({ message: "Error while retrieving journal details!" });
   }
 });
 
 app.get("/", async (req, res) => {
-  res.send("Server Activated");
+  res.send("Reviva - Server Activated");
 });
 
 const connectDB = async () => {

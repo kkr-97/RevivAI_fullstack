@@ -1,0 +1,11 @@
+.journal-item{
+    background-color: azure;
+    margin-bottom: 1rem;
+    padding: 12px;
+    border-radius: 8px;
+    color: black
+}
+
+.journal-label-mood-container{
+    width: 85%;
+}

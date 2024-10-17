@@ -1,0 +1,30 @@
+.journal-container{
+    height: 80vh;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    position:relative;
+}
+
+.journal-container .header-container{
+    display: flex;
+    align-items:center;
+}
+
+.input-container{
+    display: flex;
+    flex-direction: column;
+    color:#000000;
+    margin-right: 1rem; 
+}
+
+.journal-input-container{
+    display: flex;
+}
+
+.submit-btn{
+    position: absolute;
+    bottom: 22px;
+    right:22px;
+}

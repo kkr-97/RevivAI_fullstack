@@ -3,13 +3,16 @@ import axios from "axios";
 import Cookie from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
+import { useDispatch } from "react-redux";
+import { onSuccessfulLogin } from "../../store/userSlice";
+
 import "./index.css";
 
 const status = {
   initial: "INITIAL",
-  loading: "fetching Details...",
+  loading: "FETCHING DETAILS...",
   success: "SUCCESS",
-  failed: "Failed",
+  failed: "FAILED",
 };
 
 function SignUp() {
@@ -22,14 +25,30 @@ function SignUp() {
   const [passwordState, setPasswordState] = useState(false);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const token = Cookie.get("reviva-token");
 
   useEffect(() => {
     if (token) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
   }, [navigate, token]);
+
+  const onSuccessfulSignIn = ({ username, token, userId, message }) => {
+    Cookie.set("reviva-token", token, { expires: 1 });
+    Cookie.set("reviva-username", username, { expires: 1 });
+    Cookie.set("reviva-userid", userId, { expires: 1 });
+    dispatch(
+      onSuccessfulLogin({
+        username: username,
+        userId: userId,
+      })
+    );
+    setMsg(message);
+    setSignInStatus(status.success);
+    navigate("/");
+  };
 
   const toggleForm = () => {
     setUsername("");
@@ -47,10 +66,12 @@ function SignUp() {
         email,
         password,
       });
-      Cookie.set("reviva-token", response.data.token);
-      setMsg(response.data.message);
-      setSignInStatus(status.success);
-      navigate("/");
+      onSuccessfulSignIn({
+        token: response.data.token,
+        username: response.data.username,
+        userId: response.data.id,
+        message: response.data.message,
+      });
     } catch (e) {
       console.log("Error: ", e);
       setSignInStatus(status.failed);
@@ -67,10 +88,12 @@ function SignUp() {
         username,
         password,
       });
-      Cookie.set("reviva-token", response.data.token);
-      setMsg(response.data.message);
-      setSignInStatus(status.success);
-      navigate("/");
+      onSuccessfulSignIn({
+        token: response.data.token,
+        username: response.data.username,
+        userId: response.data.id,
+        message: response.data.message,
+      });
     } catch (e) {
       console.log("Error: ", e);
       setSignInStatus(status.failed);
@@ -87,7 +110,7 @@ function SignUp() {
       <div className="row">
         <div className="col-md-6 sign-up-left d-flex align-items-center justify-content-center">
           <h1 className="m-auto align-self-center">
-            RevivAI - Track your Moments
+            Reviva - Track your Moments
           </h1>
         </div>
         <div

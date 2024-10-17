@@ -2,6 +2,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Cookie from "js-cookie";
 
+import { useSelector } from "react-redux";
+
 const navItems = [
   {
     path: "/",
@@ -22,6 +24,8 @@ const navItems = [
 
 function Navbar() {
   const [isDropDownOpen, setDropDown] = useState(false);
+
+  const userName = useSelector((state) => state.user.username);
 
   const onClickProfile = () => {
     setDropDown(!isDropDownOpen);
@@ -44,7 +48,7 @@ function Navbar() {
           className="rounded-circle text-white m-0 mx-1 d-flex align-items-center justify-content-center p-2 bg-secondary"
           style={{ width: "30px", height: "30px" }}
         >
-          {"K"}
+          {userName[0]?.toUpperCase()}
         </p>
         <i
           className={
@@ -54,14 +58,14 @@ function Navbar() {
         ></i>
       </div>
       {isDropDownOpen && (
-        <div className="drop-down bg-light p-3">
+        <div className="drop-down bg-secondary p-3">
           <h5 className="d-flex align-items-center profile-name border-bottom py-2">
             <img
               src="/assets/images/hello.png"
               style={{ width: "32px" }}
               alt="hello"
             />
-            {" Keerthan"}
+            {userName}
           </h5>
 
           <button className="btn btn-warning" onClick={onLogout}>
@@ -73,7 +77,7 @@ function Navbar() {
   );
 
   return (
-    <nav className="navbar navbar-expand-md bg-white border-bottom p-2 mb-5">
+    <nav className="navbar navbar-expand-md bg-dark navbar-dark border-bottom border-secondary p-2 mb-4">
       <div className="container">
         <NavLink className="navbar-brand" to="/">
           {/* <img
@@ -82,7 +86,7 @@ function Navbar() {
             className="nav-logo"
             style={{ width: "150px" }} // Adjust the width as needed
           /> */}
-          RevivAI
+          Reviva
         </NavLink>
 
         <div

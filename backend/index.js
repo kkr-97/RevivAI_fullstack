@@ -146,6 +146,25 @@ app.get("/journal-items/:userId", async (req, res) => {
   }
 });
 
+app.get("/journal/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const journal = await JournalModel.findOne({
+      _id: new mongoose.Types.ObjectId(id),
+    });
+    if (!journal) {
+      res.status(404).json({ message: "Journal not found!" });
+    } else {
+      res.status(200).json({ journal });
+    }
+  } catch (err) {
+    console.error("Error while retrieving journal: ", err);
+    res
+      .status(500)
+      .json({ message: "Error while retrieving journal details!" });
+  }
+});
+
 app.get("/", async (req, res) => {
   res.send("Reviva - Server Activated");
 });

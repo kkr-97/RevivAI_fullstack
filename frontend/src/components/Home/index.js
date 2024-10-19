@@ -8,10 +8,14 @@ import "./index.css";
 const dayTypes = [
   { type: "Happy", icon: "😊" },
   { type: "Stressed", icon: "🤯" },
-  { type: "Average", icon: "😐" },
+  { type: "Boring", icon: "🥱" },
   { type: "Sad", icon: "🥺" },
   { type: "Angry", icon: "😠" },
-  { type: "Not Able to know", icon: "❔" },
+  { type: "Productive", icon: "💼" },
+  { type: "Relaxed", icon: "😌" },
+  { type: "Anxious", icon: "😰" },
+  { type: "Motivated", icon: "💪" },
+  { type: "Confused", icon: "😕" },
 ];
 
 const status = {
@@ -24,7 +28,7 @@ const status = {
 function Home() {
   const [date, setDate] = useState(new Date());
   const [journal, setJournal] = useState("");
-  const [dayType, setVerdict] = useState(dayTypes[0]);
+  const [dayType, setVerdict] = useState(dayTypes[0].type);
   const [journalStatus, setJournalStatus] = useState(status.initial);
 
   const username = useSelector((state) => state.user.username);

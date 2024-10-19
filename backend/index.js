@@ -109,10 +109,7 @@ app.post("/create-journal", async (req, res) => {
 
   try {
     const summary = await summarizeJournal(journal);
-    const result = await sentimentAnalyze(
-      summary,
-      process.env.HUGGINGFACE_TOKEN
-    );
+    const result = await sentimentAnalyze(journal);
     const aiFeedback = await getFeedback(dayType, summary);
 
     const journalEntry = new JournalModel({
@@ -138,11 +135,16 @@ app.post("/create-journal", async (req, res) => {
 app.get("/journal-items/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const journalItems = await JournalModel.find({ userId: userId }, {});
+    const journalItems = await JournalModel.find({ userId: userId }).sort({
+      date: -1,
+    });
     res.status(200).json({ journalItems });
     console.log("Journal Items Sent Successfully");
   } catch (err) {
     console.error("Error while retrieving journals: ", err);
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving journal items." });
   }
 });
 
@@ -162,6 +164,91 @@ app.get("/journal/:id", async (req, res) => {
     res
       .status(500)
       .json({ message: "Error while retrieving journal details!" });
+  }
+});
+
+app.get("/journals/pie-chart", async (req, res) => {
+  try {
+    const aggregation = await JournalModel.aggregate([
+      {
+        $sort: { date: -1 },
+      },
+      {
+        $limit: 10,
+      },
+      {
+        $group: {
+          _id: "$dayType",
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          value: "$count",
+          label: "$_id",
+        },
+      },
+    ]);
+
+    res.json({ aggregation });
+  } catch (e) {
+    console.error("Error running aggregation:", e);
+    res.status(500).json({ message: "Error while retrieving Aggregate data" });
+  }
+});
+
+app.get("/journals/emotions-trends-data", async (req, res) => {
+  try {
+    const trendsData = await JournalModel.aggregate([
+      {
+        $sort: { date: -1 },
+      },
+      {
+        $project: {
+          name: {
+            $dateToString: { format: "%d-%b", date: "$date" },
+          },
+          positive: "$emotions.positive",
+          negative: "$emotions.negative",
+          neutral: "$emotions.neutral",
+        },
+      },
+    ]);
+    res.status(200).json({ trendsData });
+  } catch (err) {
+    console.error("Error while retrieving Emotional Trends: ", err);
+    res
+      .status(500)
+      .json({ message: "Error while retrieving Emotional Trends" });
+  }
+});
+
+app.get("/journals/top-moments", async (req, res) => {
+  try {
+    const topMoments = await JournalModel.aggregate([
+      {
+        $match: { dayType: "Happy" }, // Filter for happy moments
+      },
+      {
+        $sort: { "emotions.positive": -1 },
+      },
+      {
+        $limit: 3,
+      },
+      {
+        $project: {
+          id: "$_id",
+          date: "$date",
+          summary: "$emotions.summary",
+          positiveScore: "$emotions.positive",
+        },
+      },
+    ]);
+    res.status(200).json({ topMoments });
+  } catch (err) {
+    console.error("Error while retrieving Top Moments: ", err);
+    res.status(500).json({ message: "Error while retrieving Top Moments" });
   }
 });
 

@@ -20,23 +20,27 @@ function Dashboard() {
     axios
       .get(`http://localhost:3001/journal-items/${userId}`)
       .then((res) => {
+        setLoadStatus(status.success);
         setItems(res.data.journalItems);
       })
       .catch((err) => {
+        setLoadStatus(status.error);
         console.error(err);
       });
   }, []);
 
   return (
-    <div className="container">
-      <div className="row">
-        <ul className="col-12 journals-list-container">
-          {items.map((item) => (
-            <JournalItem key={item._id} details={item} />
-          ))}
-        </ul>
+    loadStatus === status.success && (
+      <div className="container">
+        <div className="row">
+          <ul className="col-12 journals-list-container">
+            {items.map((item) => (
+              <JournalItem key={item._id} details={item} />
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    )
   );
 }
 

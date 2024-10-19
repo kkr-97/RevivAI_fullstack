@@ -1,47 +1,141 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import ProgressBar from "@ramonak/react-progress-bar";
 import axios from "axios";
 
-const obj = {
-  emotions: {
-    positive: 0.383,
-    neutral: 0.617,
-    negative: 0,
-    aiFeedback:
-      "You're crushing it!  Keep up the momentum and that positive attitude. \n",
-    summary:
-      "I'm so proud of myself for successfully deploying my full-stack app today!  Even though I hit a few snags, I feel like I've made incredible progress and that little victory, combined with some quality time with friends, has left me feeling energized and optimistic about the future. \n",
-  },
-  _id: "670fc643eabc1797e2a2ecb6",
-  userId: "66fbdfdcedf54cf004298f12",
-  date: "2024-10-11",
-  dayType: "Happy",
-  journal:
-    "Today was a great day! I woke up feeling energized and ready to tackle everything on my list. The biggest win of the day was finally getting my full stack app deployed, and even though there were some hiccups with response times, I feel proud of the progress I’ve made so far. Each step forward is a reminder of how much I’ve learned, and I’m excited to keep improving.\n\nOn top of that, I had a really good balance between work and personal time. I spent the afternoon catching up with friends, and it gave me a fresh perspective on how important it is to step away and recharge. Overall, feeling optimistic about where things are headed!",
-  createdAt: "2024-10-16T13:57:23.885Z",
-  __v: 0,
+import "./index.css";
+
+const status = {
+  initial: "INITIAL",
+  loading: "LOADING",
+  success: "SUCCESS",
+  failed: "Failed",
 };
 
 function DetailJournalPage() {
-  const [details, setDetails] = useState(obj);
+  const [details, setDetails] = useState({});
+  const [journalStatus, setJournalStatus] = useState(status.initial);
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  //   useEffect(() => {
-  //     axios
-  //       .get(`http://localhost:3001/journal/${id}`)
-  //       .then((res) => {
-  //         console.log(res.data.journal);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err?.res?.data?.message);
-  //       });
-  //   }, []);
+  const newJournalDate = new Date(details.date);
+  const newCreatedDate = new Date(details.createdAt);
+
+  useEffect(() => {
+    setJournalStatus(status.loading);
+    axios
+      .get(`http://localhost:3001/journal/${id}`)
+      .then((res) => {
+        setDetails(res.data.journal);
+        setJournalStatus(status.success);
+        console.log(res.data.journal);
+      })
+      .catch((err) => {
+        setJournalStatus(status.failed);
+        console.error(err?.res?.data?.message);
+      });
+  }, [id]);
   return (
-    <div className="container">
-      <div className="row">
-        <div className="col-12"></div>
+    journalStatus === status.success && (
+      <div className="container">
+        <div className="row mb-3">
+          <div className="col-12">
+            <button onClick={() => navigate(-1)} className="btn btn-warning">
+              Back
+            </button>
+          </div>
+        </div>
+        <div className="bg-light text-dark rounded p-2">
+          <div className="row mt-3 mb-4">
+            <div className="col-12 col-md-2 d-flex align-items-center justify-content-center">
+              <div className="date-container text-center border rounded-circle p-3">
+                {newJournalDate.getDate()}
+                <br />
+                {newJournalDate.toLocaleString("default", { month: "short" }) +
+                  ", " +
+                  newJournalDate.getFullYear()}
+              </div>
+            </div>
+            <div className="col-12 col-md-8 d-flex flex-column justify-content-center">
+              <div className="score-container ">
+                <div className="mt-1 mb-0 d-flex align-items-center">
+                  <small>
+                    <b>Positive</b>
+                  </small>{" "}
+                  <ProgressBar
+                    bgColor="#2b8600"
+                    height="12px"
+                    completed={(details.emotions.positive * 100).toFixed()}
+                    className="flex-grow-1 ms-2"
+                  />
+                </div>
+                <div className="mb-0 d-flex align-items-center">
+                  <small>
+                    <b>Neutral</b>
+                  </small>{" "}
+                  <ProgressBar
+                    bgColor="#e0a91e"
+                    height="12px"
+                    completed={(details.emotions.neutral * 100).toFixed()}
+                    className="flex-grow-1 ms-2"
+                  />
+                </div>
+                <div className="mb-2 d-flex align-items-center">
+                  <small>
+                    <b>Negative</b>
+                  </small>{" "}
+                  <ProgressBar
+                    bgColor="#f00808"
+                    height="12px"
+                    completed={(details.emotions.negative * 100).toFixed()}
+                    className="flex-grow-1 ms-2"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-md-2 d-flex flex-column justify-content-center">
+              <div className="type-created-container">
+                <small className="mb-1">
+                  <b>Day Type: </b>
+                  {details.dayType}
+                </small>
+                <br />
+                <small>
+                  <b>Created on: </b>
+                  {newCreatedDate.toDateString()}
+                </small>
+              </div>
+            </div>
+          </div>
+          <div className="row p-4">
+            <div className="col-12">
+              <div className="summary-container ">
+                <p className="alert alert-primary">
+                  <b>Summary: </b>
+                  {details.emotions.summary}
+                </p>
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="journal-detail-container">
+                <p className="alert alert-info">
+                  <b>Journal: </b>
+                  {details.journal}
+                </p>
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="feedback-container">
+                <p className="alert alert-warning">
+                  <b>Feedback: </b>
+                  {details.emotions.aiFeedback}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    )
   );
 }
 

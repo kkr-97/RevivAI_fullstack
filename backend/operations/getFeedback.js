@@ -5,7 +5,7 @@ async function getFeedback(dayType, journalSummary) {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    const prompt = `According to the day type and journal summary try to give feedback on the accomplishments of the user, assume yourself as a very best mentor and motivator and make sure the feedback is not more than one line. dayType:${dayType}, journalSummary:${journalSummary}`;
+    const prompt = `Based on the user’s day type and journal summary, provide an uplifting and motivating piece of feedback, as if you were their most encouraging mentor. Keep it concise, personalized, and highlight the positive aspects of their achievements, make sure it is not more than 2 lines. dayType: ${dayType}, journalSummary: ${journalSummary}`;
 
     const result = await model.generateContent(prompt);
 

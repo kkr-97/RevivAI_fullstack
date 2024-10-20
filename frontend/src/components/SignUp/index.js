@@ -39,6 +39,7 @@ function SignUp() {
     Cookie.set("reviva-token", token, { expires: 1 });
     Cookie.set("reviva-username", username, { expires: 1 });
     Cookie.set("reviva-userid", userId, { expires: 1 });
+    console.log("Successful Login", username, userId);
     dispatch(
       onSuccessfulLogin({
         username: username,
@@ -119,7 +120,7 @@ function SignUp() {
           }`}
         >
           <form
-            className="form-container"
+            className="form-container card"
             onSubmit={isLoginPage ? handleLogin : handleSignUp}
           >
             <h2 className="mb-2">{isLoginPage ? "Login" : "Signup now"}</h2>

@@ -1,0 +1,9 @@
+.top-moment-container{
+    width: 30%;
+}
+
+@media (max-width: 767px){
+    .top-moment-container{
+        width: 100%;
+    }
+}

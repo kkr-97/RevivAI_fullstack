@@ -1,5 +1,5 @@
 .journal-item{
-    background-color: azure;
+    background-color: rgb(221, 227, 227);
     margin-bottom: 1rem;
     padding: 12px;
     border-radius: 8px;
@@ -7,5 +7,21 @@
 }
 
 .journal-label-mood-container{
-    width: 85%;
+    width: 70%;
 }
+
+.positive .MuiGauge-valueArc {
+    fill: green !important; /* Example for changing the color */
+  }
+
+  .negative .MuiGauge-valueArc {
+    fill: red !important; /* Example for changing the color */
+  }
+
+  .neutral .MuiGauge-valueArc {
+    fill: orange !important; /* Example for changing the color */
+  }
+
+  .MuiGauge-valueText{
+    font-size: 0.8rem !important;
+  }

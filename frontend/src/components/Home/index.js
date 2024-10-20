@@ -1,17 +1,28 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
+import dayjs from "dayjs";
 import axios from "axios";
 import swal from "sweetalert";
+import Cookie from "js-cookie";
 
 import "./index.css";
 
 const dayTypes = [
   { type: "Happy", icon: "😊" },
   { type: "Stressed", icon: "🤯" },
-  { type: "Average", icon: "😐" },
+  { type: "Boring", icon: "🥱" },
   { type: "Sad", icon: "🥺" },
   { type: "Angry", icon: "😠" },
-  { type: "Not Able to know", icon: "❔" },
+  { type: "Productive", icon: "💼" },
+  { type: "Relaxed", icon: "😌" },
+  { type: "Anxious", icon: "😰" },
+  { type: "Motivated", icon: "💪" },
+  { type: "Confused", icon: "😕" },
 ];
 
 const status = {
@@ -22,15 +33,14 @@ const status = {
 };
 
 function Home() {
-  const [date, setDate] = useState(new Date());
+  const [date, setSelectedDate] = useState();
   const [journal, setJournal] = useState("");
-  const [dayType, setVerdict] = useState(dayTypes[0]);
+  const [dayType, setVerdict] = useState(dayTypes[0].type);
   const [journalStatus, setJournalStatus] = useState(status.initial);
 
   const username = useSelector((state) => state.user.username);
   const userId = useSelector((state) => state.user.userId);
 
-  const onChangeDate = (e) => setDate(e.target.value);
   const onChangeJournal = (e) => setJournal(e.target.value);
   const onChangeVerdict = (e) => setVerdict(e.target.value);
 
@@ -40,15 +50,26 @@ function Home() {
     setJournalStatus(status.submitting);
 
     await axios
-      .post("http://localhost:3001/create-journal", {
-        userId,
-        date,
-        dayType,
-        journal,
-      })
+      .post(
+        "http://localhost:3001/create-journal",
+        {
+          userId,
+          date,
+          dayType,
+          journal,
+        },
+        {
+          headers: {
+            "auth-token": Cookie.get("reviva-token"),
+          },
+        }
+      )
       .then((res) => {
         const analysis = res.data.aiFeedback;
-
+        setJournalStatus(status.submitted);
+        setSelectedDate();
+        setJournal("");
+        setVerdict(dayTypes[0].type);
         swal("👇Feedback from Reviva👇", analysis, "success");
         // console.log(res.data);
       })
@@ -66,28 +87,31 @@ function Home() {
     <div className="container">
       <div className="row">
         <div className="col">
-          <h2 className="main-head ">
-            Hello👋, {username}! <br />
-            how's your day...
-          </h2>
+          <h4 className="main-head mb-4 mt-2">Hello👋, {username}</h4>
+          <h2>Tell the moment, let's capture it...</h2>
           <form
             onSubmit={submitJournal}
             className="journal-container bg-light bg-gradient"
           >
-            <div className="header-container pb-2">
+            <div className="header-container pb-2 d-flex flex-column flex-md-row align-items-start align-items-md-center">
               <div className="input-container date-container form-group">
                 <label htmlFor="journal_input_date">Date</label>
-                <input
-                  type="date"
-                  id="journal_input_date"
-                  className="form-control"
-                  name="date"
-                  onChange={onChangeDate}
-                  value={date}
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DateTimePicker"]}>
+                    <DateTimePicker
+                      value={date}
+                      onChange={(newValue) => setSelectedDate(newValue)}
+                      viewRenderers={{
+                        hours: renderTimeViewClock,
+                        minutes: renderTimeViewClock,
+                        seconds: renderTimeViewClock,
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </div>
               <div className="input-container type-container from-group">
-                <label htmlFor="dayType">Verdict of the Day</label>
+                <label htmlFor="dayType">Verdict of the Moment</label>
                 <select
                   id="dayType"
                   className="form-control"
@@ -107,7 +131,7 @@ function Home() {
               <textarea
                 value={journal}
                 onChange={onChangeJournal}
-                placeholder="Describe about your day here..."
+                placeholder="Describe about the moment here..."
                 className="flex-grow-1 form-control"
               ></textarea>
             </div>

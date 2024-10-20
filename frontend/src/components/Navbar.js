@@ -77,7 +77,7 @@ function Navbar() {
   );
 
   return (
-    <nav className="navbar navbar-expand-md bg-dark navbar-dark border-bottom border-secondary p-2 mb-4">
+    <nav className="navbar navbar-expand-md bg-dark navbar-dark border-bottom border-secondary p-2 mb-4 position-sticky z-1 top-0">
       <div className="container">
         <NavLink className="navbar-brand" to="/">
           {/* <img

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ProgressBar from "@ramonak/react-progress-bar";
+import Cookie from "js-cookie";
 import axios from "axios";
 
 import "./index.css";
@@ -24,11 +25,14 @@ function DetailJournalPage() {
   useEffect(() => {
     setJournalStatus(status.loading);
     axios
-      .get(`http://localhost:3001/journal/${id}`)
+      .get(`http://localhost:3001/journal/${id}`, {
+        headers: {
+          "auth-token": Cookie.get("reviva-token"),
+        },
+      })
       .then((res) => {
         setDetails(res.data.journal);
         setJournalStatus(status.success);
-        console.log(res.data.journal);
       })
       .catch((err) => {
         setJournalStatus(status.failed);
@@ -54,6 +58,13 @@ function DetailJournalPage() {
                 {newJournalDate.toLocaleString("default", { month: "short" }) +
                   ", " +
                   newJournalDate.getFullYear()}
+                <br />
+                <small>
+                  {newJournalDate.toLocaleString("default", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </small>
               </div>
             </div>
             <div className="col-12 col-md-8 d-flex flex-column justify-content-center">

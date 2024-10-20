@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import Cookie from "js-cookie";
 import JournalItem from "../JournalItem";
 
 const status = {
@@ -14,14 +15,16 @@ function Dashboard() {
   const [items, setItems] = useState([]);
   const [loadStatus, setLoadStatus] = useState(status.initial);
 
-  const userId = useSelector((state) => state.user.userId);
-
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/journal-items/${userId}`)
+      .get(`http://localhost:3001/journal-items/`, {
+        headers: {
+          "auth-token": Cookie.get("reviva-token"),
+        },
+      })
       .then((res) => {
+        setItems(res.data.journalArray);
         setLoadStatus(status.success);
-        setItems(res.data.journalItems);
       })
       .catch((err) => {
         setLoadStatus(status.error);
@@ -33,9 +36,15 @@ function Dashboard() {
     loadStatus === status.success && (
       <div className="container">
         <div className="row">
-          <ul className="col-12 journals-list-container">
-            {items.map((item) => (
-              <JournalItem key={item._id} details={item} />
+          <h2 className="col-12 mb-4">Your Moments...</h2>
+          <ul className="col-12 parent-journal-items-container list-unstyled">
+            {items.map((item, index) => (
+              <li>
+                <h5>{item.date}</h5>
+                {item.journalItems.map((jItem, index) => (
+                  <JournalItem key={jItem._id} details={jItem} />
+                ))}
+              </li>
             ))}
           </ul>
         </div>

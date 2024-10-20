@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Gauge } from "@mui/x-charts/Gauge";
 import axios from "axios";
+import Cookie from "js-cookie";
 import { Link } from "react-router-dom";
 import {
   PieChart,
@@ -49,11 +50,21 @@ function Stats() {
     const { id, positiveScore, summary, date } = moment;
     const newDate = new Date(date);
     return (
-      <div className="border rounded top-moment-container p-2 d-flex flex-column align-items-center">
+      <div
+        className="border rounded top-moment-container p-2 d-flex flex-column align-items-center justify-content-between"
+        style={{ minHeight: "280px" }}
+      >
         <p className="date border rounded-circle text-center p-3 mb-0">
           {newDate.getDate()}
           <br />
           {newDate.toLocaleString("default", { month: "short" })}
+          <br />
+          <small>
+            {newDate.toLocaleString("default", {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </small>
         </p>
 
         <div className="d-flex align-items-center">
@@ -68,7 +79,7 @@ function Stats() {
         </div>
         <p className="summary text-center">{summary}</p>
         <Link to={`/journal/${id}`} className="btn btn-warning">
-          View This Day
+          View this Moment
         </Link>
       </div>
     );
@@ -78,7 +89,11 @@ function Stats() {
     setPieStatus(status.loading);
     setMoodStatus(status.loading);
     axios
-      .get("http://localhost:3001/journals/pie-chart")
+      .get(`http://localhost:3001/journals/pie-chart`, {
+        headers: {
+          "auth-token": Cookie.get("reviva-token"),
+        },
+      })
       .then((res) => {
         setPieDetails(res.data.aggregation);
         setPieStatus(status.success);
@@ -89,7 +104,11 @@ function Stats() {
       });
 
     axios
-      .get("http://localhost:3001/journals/emotions-trends-data")
+      .get(`http://localhost:3001/journals/emotions-trends-data`, {
+        headers: {
+          "auth-token": Cookie.get("reviva-token"),
+        },
+      })
       .then((res) => {
         setMoodData(res?.data?.trendsData);
         setMoodStatus(status.success);
@@ -100,7 +119,11 @@ function Stats() {
       });
 
     axios
-      .get("http://localhost:3001/journals/top-moments")
+      .get(`http://localhost:3001/journals/top-moments`, {
+        headers: {
+          "auth-token": Cookie.get("reviva-token"),
+        },
+      })
       .then((res) => {
         setTopMoments(res.data.topMoments);
         setMomentStatus(status.success);
@@ -121,15 +144,16 @@ function Stats() {
                 Mood Distribution <small>(Past 10 entries)</small>
               </h5>
               {pieStatus === status.success && (
-                <ResponsiveContainer width="100%" height={250}>
+                <ResponsiveContainer width="100%" height={280}>
                   <PieChart>
                     <Pie
                       data={pieDetails}
                       dataKey="value"
                       nameKey="label"
-                      cx="50%" // Center X position
-                      cy="50%" // Center Y position
-                      outerRadius={100} // Adjust the radius of the pie chart
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={100}
+                      innerRadius={60}
                       fill="#8884d8"
                     >
                       {pieDetails.map((entry, index) => (
@@ -155,17 +179,17 @@ function Stats() {
               </h5>
               <div>
                 {moodStatus === status.success && (
-                  <ResponsiveContainer width="100%" height={250}>
+                  <ResponsiveContainer width="100%" height={280}>
                     <LineChart data={moodData}>
                       <CartesianGrid stroke="#ccc" />
                       <XAxis dataKey="name" />
 
                       <YAxis
                         label={{
-                          value: "Sentiment Scores", // Your custom Y-axis label
-                          angle: -90, // Rotate the label vertically
-                          position: "insideLeft", // Position of the label
-                          style: { textAnchor: "middle" }, // Optional: styling
+                          value: "Sentiment Scores",
+                          angle: -90,
+                          position: "insideLeft",
+                          style: { textAnchor: "middle" },
                         }}
                       />
 

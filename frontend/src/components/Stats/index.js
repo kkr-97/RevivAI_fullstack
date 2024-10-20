@@ -3,6 +3,7 @@ import { Gauge } from "@mui/x-charts/Gauge";
 import axios from "axios";
 import Cookie from "js-cookie";
 import { Link } from "react-router-dom";
+import Spinner from "../Spinner";
 import {
   PieChart,
   Pie,
@@ -88,8 +89,9 @@ function Stats() {
   useEffect(() => {
     setPieStatus(status.loading);
     setMoodStatus(status.loading);
+    setMomentStatus(status.loading);
     axios
-      .get(`http://localhost:3001/journals/pie-chart`, {
+      .get(`https://revivai-fullstack.onrender.com/journals/pie-chart`, {
         headers: {
           "auth-token": Cookie.get("reviva-token"),
         },
@@ -104,11 +106,14 @@ function Stats() {
       });
 
     axios
-      .get(`http://localhost:3001/journals/emotions-trends-data`, {
-        headers: {
-          "auth-token": Cookie.get("reviva-token"),
-        },
-      })
+      .get(
+        `https://revivai-fullstack.onrender.com/journals/emotions-trends-data`,
+        {
+          headers: {
+            "auth-token": Cookie.get("reviva-token"),
+          },
+        }
+      )
       .then((res) => {
         setMoodData(res?.data?.trendsData);
         setMoodStatus(status.success);
@@ -119,7 +124,7 @@ function Stats() {
       });
 
     axios
-      .get(`http://localhost:3001/journals/top-moments`, {
+      .get(`https://revivai-fullstack.onrender.com/journals/top-moments`, {
         headers: {
           "auth-token": Cookie.get("reviva-token"),
         },
@@ -134,6 +139,110 @@ function Stats() {
       });
   }, []);
 
+  const renderPieDetails = () => {
+    switch (pieStatus) {
+      case status.loading:
+        return (
+          <div className="mt-5">
+            <Spinner color="warning" />
+          </div>
+        );
+      case status.failed:
+        return <h6>Error while fetching mood data</h6>;
+      case status.success:
+        return (
+          <ResponsiveContainer width="100%" height={280}>
+            <PieChart>
+              <Pie
+                data={pieDetails}
+                dataKey="value"
+                nameKey="label"
+                cx="50%"
+                cy="50%"
+                outerRadius={100}
+                innerRadius={60}
+                fill="#8884d8"
+              >
+                {pieDetails.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderTrendsData = () => {
+    switch (moodStatus) {
+      case status.loading:
+        return (
+          <div className="mt-5">
+            <Spinner color="warning" />
+          </div>
+        );
+      case status.failed:
+        return <h6>Error while fetching Trends data</h6>;
+      case status.success:
+        return (
+          <ResponsiveContainer width="100%" height={280}>
+            <LineChart data={moodData}>
+              <CartesianGrid stroke="#ccc" />
+              <XAxis dataKey="name" />
+
+              <YAxis
+                label={{
+                  value: "Sentiment Scores",
+                  angle: -90,
+                  position: "insideLeft",
+                  style: { textAnchor: "middle" },
+                }}
+              />
+
+              <Tooltip />
+              <Legend />
+              <Line type="linear" dataKey="positive" stroke="#82ca9d" />
+              <Line type="linear" dataKey="neutral" stroke="#8884d8" />
+              <Line type="linear" dataKey="negative" stroke="#ff7300" />
+            </LineChart>
+          </ResponsiveContainer>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderTopMoments = () => {
+    switch (moodStatus) {
+      case status.loading:
+        return (
+          <div className="mt-5">
+            <Spinner color="warning" />
+          </div>
+        );
+      case status.failed:
+        return <h6>Error while fetching Top Moments data</h6>;
+      case status.success:
+        return (
+          <div className="d-flex align-items-center justify-content-between flex-column flex-md-row">
+            {momentsStatus === status.success &&
+              topMoments.map((moment, index) => (
+                <TopMoment key={index} moment={moment} />
+              ))}
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="container">
       <div className="row">
@@ -143,65 +252,17 @@ function Stats() {
               <h5 className="card-title">
                 Mood Distribution <small>(Past 10 entries)</small>
               </h5>
-              {pieStatus === status.success && (
-                <ResponsiveContainer width="100%" height={280}>
-                  <PieChart>
-                    <Pie
-                      data={pieDetails}
-                      dataKey="value"
-                      nameKey="label"
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={100}
-                      innerRadius={60}
-                      fill="#8884d8"
-                    >
-                      {pieDetails.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              )}
+              {renderPieDetails()}
             </div>
           </div>
         </div>
-        <div className="col-md-8">
+        <div className="col-md-8 mt-5 mt-md-0">
           <div className="card emotional-trends-container">
             <div className="card-body h-100">
               <h5 className="card-title">
                 Emotional Trends <small>(Past 10 entries)</small>
               </h5>
-              <div>
-                {moodStatus === status.success && (
-                  <ResponsiveContainer width="100%" height={280}>
-                    <LineChart data={moodData}>
-                      <CartesianGrid stroke="#ccc" />
-                      <XAxis dataKey="name" />
-
-                      <YAxis
-                        label={{
-                          value: "Sentiment Scores",
-                          angle: -90,
-                          position: "insideLeft",
-                          style: { textAnchor: "middle" },
-                        }}
-                      />
-
-                      <Tooltip />
-                      <Legend />
-                      <Line type="linear" dataKey="positive" stroke="#82ca9d" />
-                      <Line type="linear" dataKey="neutral" stroke="#8884d8" />
-                      <Line type="linear" dataKey="negative" stroke="#ff7300" />
-                    </LineChart>
-                  </ResponsiveContainer>
-                )}
-              </div>
+              {renderTrendsData()}
             </div>
           </div>
         </div>
@@ -211,12 +272,7 @@ function Stats() {
           <div className="card top-3-emotional-moments">
             <div className="card-body">
               <h5 className="card-title">Top 3 Happy Moments</h5>
-              <div className="d-flex align-items-center justify-content-between flex-column flex-md-row">
-                {momentsStatus === status.success &&
-                  topMoments.map((moment, index) => (
-                    <TopMoment key={index} moment={moment} />
-                  ))}
-              </div>
+              {renderTopMoments()}
             </div>
           </div>
         </div>

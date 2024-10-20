@@ -5,7 +5,8 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
-import dayjs from "dayjs";
+import Spinner from "../Spinner";
+
 import axios from "axios";
 import swal from "sweetalert";
 import Cookie from "js-cookie";
@@ -51,7 +52,7 @@ function Home() {
 
     await axios
       .post(
-        "http://localhost:3001/create-journal",
+        "https://revivai-fullstack.onrender.com/create-journal",
         {
           userId,
           date,
@@ -80,6 +81,7 @@ function Home() {
           "error"
         );
         console.error(err?.response?.data?.message);
+        setJournalStatus(status.failed);
       });
   };
 
@@ -136,7 +138,11 @@ function Home() {
               ></textarea>
             </div>
             <button type="submit" className="btn btn-warning submit-btn">
-              Submit
+              {journalStatus === status.submitting ? (
+                <Spinner color="red" />
+              ) : (
+                "Submit"
+              )}
             </button>
           </form>
         </div>

@@ -87,6 +87,11 @@ function Navbar() {
             style={{ width: "150px" }} // Adjust the width as needed
           /> */}
           Reviva
+          <img
+            src="assets/images/journaling.png"
+            alt="logo"
+            style={{ height: "2.5rem", marginLeft: "4px" }}
+          />
         </NavLink>
 
         <div

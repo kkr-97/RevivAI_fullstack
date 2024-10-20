@@ -63,10 +63,13 @@ function SignUp() {
     e.preventDefault();
     setSignInStatus(status.loading);
     try {
-      const response = await axios.post("http://localhost:3001/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://revivai-fullstack.onrender.com/login",
+        {
+          email,
+          password,
+        }
+      );
       onSuccessfulSignIn({
         token: response.data.token,
         username: response.data.username,
@@ -84,11 +87,14 @@ function SignUp() {
     e.preventDefault();
     setSignInStatus(status.loading);
     try {
-      const response = await axios.post("http://localhost:3001/register", {
-        email,
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "https://revivai-fullstack.onrender.com/register",
+        {
+          email,
+          username,
+          password,
+        }
+      );
       onSuccessfulSignIn({
         token: response.data.token,
         username: response.data.username,

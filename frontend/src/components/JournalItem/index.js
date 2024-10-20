@@ -1,4 +1,3 @@
-import ProgressBar from "@ramonak/react-progress-bar";
 import { Link } from "react-router-dom";
 import { Gauge } from "@mui/x-charts/Gauge";
 

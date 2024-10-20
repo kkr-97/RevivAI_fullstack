@@ -25,7 +25,7 @@ function DetailJournalPage() {
   useEffect(() => {
     setJournalStatus(status.loading);
     axios
-      .get(`http://localhost:3001/journal/${id}`, {
+      .get(`https://revivai-fullstack.onrender.com/journal/${id}`, {
         headers: {
           "auth-token": Cookie.get("reviva-token"),
         },

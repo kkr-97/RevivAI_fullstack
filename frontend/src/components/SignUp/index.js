@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookie from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import Spinner from "../Spinner";
 
 import { useDispatch } from "react-redux";
 import { onSuccessfulLogin } from "../../store/userSlice";
@@ -39,7 +40,6 @@ function SignUp() {
     Cookie.set("reviva-token", token, { expires: 1 });
     Cookie.set("reviva-username", username, { expires: 1 });
     Cookie.set("reviva-userid", userId, { expires: 1 });
-    console.log("Successful Login", username, userId);
     dispatch(
       onSuccessfulLogin({
         username: username,
@@ -76,6 +76,7 @@ function SignUp() {
         userId: response.data.id,
         message: response.data.message,
       });
+      setSignInStatus(status.success);
     } catch (e) {
       console.log("Error: ", e);
       setSignInStatus(status.failed);
@@ -209,7 +210,13 @@ function SignUp() {
                 ? "Don’t have an account?"
                 : "Already have an account?"}{" "}
               <span className="text-warning" onClick={toggleForm} role="button">
-                {isLoginPage ? "Register now" : "Log in"}
+                {signInStatus === status.loading ? (
+                  <Spinner color="#000" />
+                ) : isLoginPage ? (
+                  "Register now"
+                ) : (
+                  "Log in"
+                )}
               </span>
             </p>
             <br />

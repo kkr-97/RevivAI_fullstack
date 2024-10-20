@@ -139,6 +139,14 @@ function Stats() {
       });
   }, []);
 
+  const pieDataLenCondition = () => {
+    let cnt = 0;
+    pieDetails.forEach((item) => {
+      cnt += item.value;
+    });
+    return cnt < 10;
+  };
+
   const renderPieDetails = () => {
     switch (pieStatus) {
       case status.loading:
@@ -150,7 +158,9 @@ function Stats() {
       case status.failed:
         return <h6>Error while fetching mood data</h6>;
       case status.success:
-        return (
+        return pieDataLenCondition() ? (
+          <small className="mt-5">Inadequate Data</small>
+        ) : (
           <ResponsiveContainer width="100%" height={280}>
             <PieChart>
               <Pie
@@ -191,7 +201,9 @@ function Stats() {
       case status.failed:
         return <h6>Error while fetching Trends data</h6>;
       case status.success:
-        return (
+        return moodData.length !== 10 ? (
+          <small className="mt-5">Inadequate Data</small>
+        ) : (
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={moodData}>
               <CartesianGrid stroke="#ccc" />
@@ -220,7 +232,7 @@ function Stats() {
   };
 
   const renderTopMoments = () => {
-    switch (moodStatus) {
+    switch (momentsStatus) {
       case status.loading:
         return (
           <div className="mt-5">
@@ -230,12 +242,13 @@ function Stats() {
       case status.failed:
         return <h6>Error while fetching Top Moments data</h6>;
       case status.success:
-        return (
+        return topMoments.length === 0 ? (
+          <small className="mt-5">Inadequate Data</small>
+        ) : (
           <div className="d-flex align-items-center justify-content-between flex-column flex-md-row">
-            {momentsStatus === status.success &&
-              topMoments.map((moment, index) => (
-                <TopMoment key={index} moment={moment} />
-              ))}
+            {topMoments.map((moment, index) => (
+              <TopMoment key={index} moment={moment} />
+            ))}
           </div>
         );
       default:
@@ -271,7 +284,7 @@ function Stats() {
         <div className="col-12">
           <div className="card top-3-emotional-moments">
             <div className="card-body">
-              <h5 className="card-title">Top 3 Happy Moments</h5>
+              <h5 className="card-title">Top Happy Moments</h5>
               {renderTopMoments()}
             </div>
           </div>

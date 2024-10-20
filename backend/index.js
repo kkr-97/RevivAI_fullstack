@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { configDotenv } from "dotenv";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { check, validationResult } from "express-validator";
 
@@ -45,8 +45,8 @@ app.post(
         return res.status(400).json({ message: "User Already Exist!!" });
       }
 
-      const salt = await bcrypt.genSalt(7);
-      const hashedPass = await bcrypt.hash(password, salt);
+      const salt = await bcryptjs.genSalt(7);
+      const hashedPass = await bcryptjs.hash(password, salt);
 
       const newUser = new UserModel({
         email: email,
@@ -89,7 +89,7 @@ app.post(
       if (!user) {
         return res.status(401).json({ message: "No User Found!!" });
       }
-      const isValidPass = await bcrypt.compare(password, user.passwordHash);
+      const isValidPass = await bcryptjs.compare(password, user.passwordHash);
       if (!isValidPass) {
         return res.status(401).json({ message: "Invalid Password!" });
       }

@@ -107,15 +107,15 @@ function SignUp() {
   const onChangePassword = (e) => setPassword(e.target.value);
 
   return (
-    <div className="container sign-up-bg-container">
-      <div className="row">
+    <div className="container ">
+      <div className="row ">
         <div className="col-md-6 sign-up-left d-flex align-items-center justify-content-center">
-          <h1 className="m-auto align-self-center">
+          <h1 className="align-self-center mt-5 mt-md-0">
             Reviva - Track your Moments
           </h1>
         </div>
         <div
-          className={`col-12 col-lg-5 p-5 text-center text-lg-start d-flex flex-column justify-content-center align-items-start rotate-container ${
+          className={`col-12 col-lg-5 p-2 p-md-5 text-center text-lg-start d-flex flex-column justify-content-center align-items-start rotate-container ${
             !isLoginPage ? "rotate-register" : "rotate-login"
           }`}
         >

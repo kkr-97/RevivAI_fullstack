@@ -16,6 +16,13 @@ The app is simple to use and provides uplifting feedback using the power of AI. 
 
 ---
 
+## 🚀 Live Demo
+
+You can try out **Reviva** by visiting the live demo link: [[Reviva Live Demo](#)  ](https://reviva-t1co.onrender.com/)
+Please note: Since the backend is hosted on **Render**, each request might take 50 seconds or more due to inactivity.
+
+---
+
 ## ✨ Main Features
 
 - **Achievement Recognition**: Track your accomplishments and get regular reminders of your progress.
@@ -25,12 +32,6 @@ The app is simple to use and provides uplifting feedback using the power of AI. 
 
 ---
 
-## 🚀 Live Demo
-
-You can try out **Reviva** by visiting the live demo link: [Reviva Live Demo](#)  
-Please note: Since the backend is hosted on **Render**, each request might take 50 seconds or more due to inactivity.
-
----
 
 ## 💻 Tech Stack
 
@@ -98,3 +99,27 @@ npm install
 
 # Start the backend server
 npm start
+
+
+### 2. Frontend Setup
+# Navigate to frontend directory
+cd frontend
+
+# Install frontend dependencies
+npm install
+
+# Start the frontend server
+npm start
+```
+
+---
+
+## 🤝 Contributions
+
+Contributions are always welcome! If you'd like to contribute, feel free to fork the repository, submit a pull request, or suggest any improvements or bug fixes.
+
+---
+
+## 📬 Contact
+
+Feel free to reach out if you have any questions or feedback regarding the project.

@@ -82,6 +82,12 @@ Please note: Since the backend is hosted on **Render**, each request might take 
     - **Stats**: View emotional trends and data visualizations.
     - **Navbar**, **NotFound**, **ProtectedRoute**: Common utility components for navigation and access control.
   - **store**: Redux store configuration for managing state.
+  
+![image](https://github.com/user-attachments/assets/d2883428-e56a-415d-93cb-3f7bcad05edc)
+![image](https://github.com/user-attachments/assets/366d6777-21a5-487a-bd54-9e36016e29be)
+![image](https://github.com/user-attachments/assets/4ff95716-6516-4414-b273-2473aa4831eb)
+
+
 
 ### Backend Directory
 

@@ -114,6 +114,12 @@ cd backend
 # Install backend dependencies
 npm install
 
+# Create a .env file in the backend root directory and add the following environment variables:
+MONGODB_URI=your_mongodb_connection_string
+PORT=your_preferred_port_number
+SECRET_KEY=your_jwt_secret_key
+GEMINI_API_KEY=your_gemini_api_key
+
 # Start the backend server
 npm start
 

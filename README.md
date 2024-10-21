@@ -18,7 +18,7 @@ The app is simple to use and provides uplifting feedback using the power of AI. 
 
 ## 🚀 Live Demo
 
-You can try out **Reviva** by visiting the live demo link: [[Reviva Live Demo](#https://reviva-t1co.onrender.com/) ]
+You can try out **Reviva** by visiting the live demo link: [Reviva Live Demo](#https://reviva-t1co.onrender.com/)
 Please note: Since the backend is hosted on **Render**, each request might take 50 seconds or more due to inactivity.
 
 ---

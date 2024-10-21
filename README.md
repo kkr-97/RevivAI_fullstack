@@ -106,7 +106,7 @@ Follow these steps to clone and set up the project locally:
 
 ```bash
 # Clone the repository
-git clone <your-repo-link>
+git clone https://github.com/kkr-97/RevivAI_fullstack.git
 
 # Navigate to backend directory
 cd backend

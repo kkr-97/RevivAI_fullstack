@@ -2,7 +2,11 @@
 
 **Reviva** is a unique journaling application designed to help you recognize and reflect on your achievements. By automatically summarizing your daily accomplishments and providing AI-driven feedback, Reviva tracks your emotional trends and offers personalized insights to help you stay motivated.
 
+
+
 ---
+
+
 
 ## 🌟 Project Overview
 
@@ -14,14 +18,21 @@ That’s how the idea of **"Reviva - Capture your moments"** was born! 🌱
 
 The app is simple to use and provides uplifting feedback using the power of AI. Built using the MERN stack, Reviva integrates **Google LLMs** and **Hugging Face Models** to offer feedback and sentiment analysis.
 
+
+
 ---
+
+
 
 ## 🚀 Live Demo
 
-You can try out **Reviva** by visiting the live demo link: [Reviva Live Demo](#https://reviva-t1co.onrender.com/)
+You can try out **Reviva** by visiting the live demo link: #https://reviva-t1co.onrender.com
+
 Please note: Since the backend is hosted on **Render**, each request might take 50 seconds or more due to inactivity.
 
+
 ---
+
 
 ## ✨ Main Features
 
@@ -30,7 +41,9 @@ Please note: Since the backend is hosted on **Render**, each request might take 
 - **AI-driven Journal Summaries & Feedback**: Summarized journals with motivating feedback from AI based on your entries.
 - **Weekly Notifications**: Receive weekly emails summarizing your accomplishments and key moments from the week. *(Note: Notification feature is still under development)*
 
+
 ---
+
 
 
 ## 💻 Tech Stack
@@ -47,7 +60,9 @@ Please note: Since the backend is hosted on **Render**, each request might take 
 - **bcryptjs**: For password hashing and securing user credentials.
 - **Nodemon**: To automatically restart the server during development.
 
+
 ---
+
 
 ## 📂 Folder Structure
 
@@ -79,7 +94,9 @@ Please note: Since the backend is hosted on **Render**, each request might take 
 - **middleware**: JWT-based authentication and other middleware.
 - **index.js**: Entry point for the backend, where all API routes are handled.
 
+
 ---
+
 
 ## ⚙️ Setup Instructions
 
@@ -112,7 +129,10 @@ npm install
 npm start
 ```
 
+
 ---
+
+
 
 ## 🤝 Contributions
 

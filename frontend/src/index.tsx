@@ -14,7 +14,11 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 import DetailJournalPage from "./components/DetailJournalPage";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const rootElement = document.getElementById("root");
+// if (!rootElement) throw new Error("Failed to find the root element");
+
+// Specify the type of rootElement as HTMLElement
+const root = ReactDOM.createRoot(rootElement as HTMLElement);
 root.render(
   <React.StrictMode>
     <Provider store={store}>

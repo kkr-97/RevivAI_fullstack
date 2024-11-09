@@ -1,9 +1,9 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import Cookie from "js-cookie";
 import { useNavigate, Outlet } from "react-router-dom";
 
-function ProtectedRoute() {
-  const token = Cookie.get("reviva-token");
+const ProtectedRoute: React.FC =() => {
+  const token : string | undefined = Cookie.get("reviva-token");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,7 +12,7 @@ function ProtectedRoute() {
     }
   }, [token, navigate]);
 
-  // If the user is authenticated, render the nested routes, otherwise nothing (or redirect)
+  // If the user is authenticated, render the nested routes(<Outlet/>), otherwise nothing (or redirect)
   return token ? <Outlet /> : null;
 }
 

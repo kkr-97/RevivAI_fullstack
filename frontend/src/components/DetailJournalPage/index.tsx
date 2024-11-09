@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ProgressBar from "@ramonak/react-progress-bar";
 import Cookie from "js-cookie";
@@ -13,8 +13,37 @@ const status = {
   failed: "Failed",
 };
 
+type EmotionType = {
+  positive: number,
+  neutral: number,
+  negative: number,
+  aiFeedback: string,
+  summary: string
+}
+
+type JournalType = {
+  date: string,
+  createdAt: Date,
+  emotions: EmotionType,
+  dayType: string,
+  journal: string
+
+}
+
 function DetailJournalPage() {
-  const [details, setDetails] = useState({});
+  const [details, setDetails] = useState<JournalType>({
+    date: "",
+  createdAt: new Date(),
+  emotions: {
+    positive: 0,
+    neutral: 0,
+    negative: 0,
+    aiFeedback: "",
+    summary: ""
+  },
+  dayType: "",
+  journal: ""
+  });
   const [journalStatus, setJournalStatus] = useState(status.initial);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -40,7 +69,7 @@ function DetailJournalPage() {
       });
   }, [id]);
   return (
-    journalStatus === status.success && (
+    journalStatus === status.success ? (
       <div className="container">
         <div className="row mb-3">
           <div className="col-12">
@@ -146,7 +175,7 @@ function DetailJournalPage() {
           </div>
         </div>
       </div>
-    )
+    ) : null
   );
 }
 

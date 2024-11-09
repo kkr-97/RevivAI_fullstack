@@ -11,8 +11,20 @@ const status = {
   error: "ERROR",
 };
 
+type JournalItemType = {
+  _id: string,
+  content: string,
+
+};
+
+type ItemType = {
+  date: string,
+  journalItems: JournalItemType[],
+};
+
+
 function Dashboard() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<ItemType[]>([]);
   const [loadStatus, setLoadStatus] = useState(status.initial);
 
   useEffect(() => {
@@ -36,7 +48,7 @@ function Dashboard() {
   switch (loadStatus) {
     case status.loading:
       return <Spinner color="#ffffff" />;
-    case status.failed:
+    case status.error:
       return <h2>Failed to fetch Journals</h2>;
     case status.success:
       return (
@@ -47,7 +59,7 @@ function Dashboard() {
               {items.map((item, index) => (
                 <li key={index}>
                   <h5>{item.date}</h5>
-                  {item.journalItems.map((jItem) => (
+                  {item.journalItems.map((jItem:any) => (
                     <JournalItem key={jItem._id} details={jItem} />
                   ))}
                 </li>

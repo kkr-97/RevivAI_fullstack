@@ -1,9 +1,13 @@
 import CircularProgress from "@mui/material/CircularProgress";
 
-export default function CircularIndeterminate({ color }) {
+type SpinnerPropType = {
+  color: string
+}
+
+export default function CircularIndeterminate({ color }:SpinnerPropType) {
   return (
     <div className="d-flex align-items-center justify-content-center">
-      <CircularProgress color={color} />
+      <CircularProgress  />
     </div>
   );
 }

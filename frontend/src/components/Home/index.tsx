@@ -1,15 +1,19 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
+import  RootType from "../../store/types"
 import Spinner from "../Spinner";
+import { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 import axios from "axios";
 import swal from "sweetalert";
 import Cookie from "js-cookie";
+
 
 import "./index.css";
 
@@ -34,18 +38,18 @@ const status = {
 };
 
 function Home() {
-  const [date, setSelectedDate] = useState();
+  const [date, setSelectedDate] = useState<Dayjs | null>();
   const [journal, setJournal] = useState("");
   const [dayType, setVerdict] = useState(dayTypes[0].type);
   const [journalStatus, setJournalStatus] = useState(status.initial);
 
-  const username = useSelector((state) => state.user.username);
-  const userId = useSelector((state) => state.user.userId);
+  const username = useSelector((state : RootType) => state.user.username);
+  const userId = useSelector((state : RootType) => state.user.userId);
 
-  const onChangeJournal = (e) => setJournal(e.target.value);
-  const onChangeVerdict = (e) => setVerdict(e.target.value);
+  const onChangeJournal = (e : React.ChangeEvent<HTMLTextAreaElement>) => setJournal(e.target.value);
+  const onChangeVerdict = (e : React.ChangeEvent<HTMLSelectElement>) => setVerdict(e.target.value);
 
-  const submitJournal = async (e) => {
+  const submitJournal = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setJournalStatus(status.submitting);
@@ -68,7 +72,7 @@ function Home() {
       .then((res) => {
         const analysis = res.data.aiFeedback;
         setJournalStatus(status.submitted);
-        setSelectedDate();
+        setSelectedDate(dayjs());
         setJournal("");
         setVerdict(dayTypes[0].type);
         swal("👇Feedback from Reviva👇", analysis, "success");
@@ -105,7 +109,7 @@ function Home() {
                       onChange={(newValue) => setSelectedDate(newValue)}
                       viewRenderers={{
                         hours: renderTimeViewClock,
-                        minutes: renderTimeViewClock,
+                        minutes: renderTimeViewClock, 
                         seconds: renderTimeViewClock,
                       }}
                     />

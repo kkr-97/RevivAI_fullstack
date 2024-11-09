@@ -39,15 +39,31 @@ const COLORS = [
   "#00A3E0",
 ];
 
+type MomentType = {
+  id: string,
+  positiveScore: number,
+  summary: string,
+  date: string,
+}
+
+type MomentPropType={
+  moment: MomentType,
+}
+
+type PieTypes={
+  value: number,
+  label: string,
+}
+
 function Stats() {
-  const [pieDetails, setPieDetails] = useState([]);
+  const [pieDetails, setPieDetails] = useState<PieTypes[]>([]);
   const [moodData, setMoodData] = useState([]);
   const [topMoments, setTopMoments] = useState([]);
   const [pieStatus, setPieStatus] = useState(status.initial);
   const [moodStatus, setMoodStatus] = useState(status.initial);
   const [momentsStatus, setMomentStatus] = useState(status.initial);
 
-  const TopMoment = ({ moment }) => {
+  const TopMoment = ({ moment }: MomentPropType) => {
     const { id, positiveScore, summary, date } = moment;
     const newDate = new Date(date);
     return (
@@ -74,7 +90,7 @@ function Stats() {
             <Gauge
               width={50}
               height={50}
-              value={(positiveScore * 100).toFixed()}
+              value={parseFloat((positiveScore * 100).toFixed())}
             />
           </span>
         </div>
@@ -120,7 +136,7 @@ function Stats() {
       })
       .catch((err) => {
         console.error("Error", err?.response?.data?.message);
-        setMoodStatus(status.failed);
+        setMoodStatus(status.error);
       });
 
     axios
@@ -155,7 +171,7 @@ function Stats() {
             <Spinner color="warning" />
           </div>
         );
-      case status.failed:
+      case status.error:
         return <h6>Error while fetching mood data</h6>;
       case status.success:
         return pieDataLenCondition() ? (
@@ -198,7 +214,7 @@ function Stats() {
             <Spinner color="warning" />
           </div>
         );
-      case status.failed:
+      case status.error:
         return <h6>Error while fetching Trends data</h6>;
       case status.success:
         return moodData.length !== 10 ? (
@@ -239,14 +255,14 @@ function Stats() {
             <Spinner color="warning" />
           </div>
         );
-      case status.failed:
+      case status.error:
         return <h6>Error while fetching Top Moments data</h6>;
       case status.success:
         return topMoments.length === 0 ? (
           <small className="mt-5">Inadequate Data</small>
         ) : (
           <div className="d-flex align-items-center justify-content-between flex-column flex-md-row">
-            {topMoments.map((moment, index) => (
+            {topMoments.map((moment:MomentType, index:number) => (
               <TopMoment key={index} moment={moment} />
             ))}
           </div>

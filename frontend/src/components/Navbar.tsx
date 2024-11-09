@@ -3,8 +3,9 @@ import { useState } from "react";
 import Cookie from "js-cookie";
 
 import { useSelector } from "react-redux";
+import RootType from "../store/types";
 
-const navItems = [
+const navItems : Array<{path:string,name: string, icon:string}> = [
   {
     path: "/",
     name: "Home",
@@ -23,9 +24,9 @@ const navItems = [
 ];
 
 function Navbar() {
-  const [isDropDownOpen, setDropDown] = useState(false);
+  const [isDropDownOpen, setDropDown] = useState<Boolean>(false);
 
-  const userName = useSelector((state) => state.user.username);
+  const userName = useSelector((state : RootType) => state.user.username);
 
   const onClickProfile = () => {
     setDropDown(!isDropDownOpen);
@@ -99,7 +100,7 @@ function Navbar() {
           aria-expanded="false"
         >
           <Profile />
-          <span
+          <button
             className="navbar-toggler navbar-toggler-icon d-flex align-items-center"
             type="button"
             data-bs-toggle="collapse"
@@ -107,14 +108,13 @@ function Navbar() {
             aria-controls="navbarNavDropdown"
             aria-expanded="false"
             aria-label="Toggle navigation"
-          ></span>
+          ></button>
         </div>
         <div className="collapse navbar-collapse" id="navbarNavDropdown">
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             {navItems.map((item) => (
               <li className="nav-item" key={item.path}>
                 <NavLink
-                  activeclassname="active"
                   className="nav-link"
                   to={item.path}
                 >

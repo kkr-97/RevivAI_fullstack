@@ -3,7 +3,18 @@ import { Gauge } from "@mui/x-charts/Gauge";
 
 import "./index.css";
 
-function JournalItem({ details }) {
+type JournalItemType = {
+  _id: string,
+  content: string,
+
+};
+
+type ItemType = {
+  date: string,
+  journalItems: JournalItemType[],
+};
+
+function JournalItem({ details}: any) {
   const { date, dayType, emotions, _id } = details;
   const { positive, negative, neutral, summary } = emotions;
 
@@ -33,8 +44,7 @@ function JournalItem({ details }) {
                   <Gauge
                     width={45}
                     height={45}
-                    value={(positive * 100).toFixed()}
-                    color="#00ff00"
+                    value={parseFloat((positive * 100).toFixed())}
                     className="custom-gauge"
                   />
                 </span>
@@ -47,7 +57,7 @@ function JournalItem({ details }) {
                   <Gauge
                     width={45}
                     height={45}
-                    value={(neutral * 100).toFixed()}
+                    value={parseFloat((neutral * 100).toFixed())}
                   />
                 </span>
               </div>
@@ -59,7 +69,7 @@ function JournalItem({ details }) {
                   <Gauge
                     width={45}
                     height={45}
-                    value={(negative * 100).toFixed()}
+                    value={parseFloat((negative * 100).toFixed())}
                   />
                 </span>
               </div>

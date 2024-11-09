@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "jsx": "react-jsx",
+    // "allowJs": true,
+    // "checkJs": true,
+    // "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "target": "ES2017"
+  },
+  "include": ["src/**/*.tsx", "src/*.ts"]
+}

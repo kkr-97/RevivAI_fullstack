@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import Cookie from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../Spinner";
@@ -36,7 +36,15 @@ function SignUp() {
     }
   }, [navigate, token]);
 
-  const onSuccessfulSignIn = ({ username, token, userId, message }) => {
+  type DetailsPropTypes = {
+    username: string,
+    token: string,
+    userId: string,
+    message: string
+
+  }
+
+  const onSuccessfulSignIn = ({ username, token, userId, message } : DetailsPropTypes) => {
     Cookie.set("reviva-token", token, { expires: 1 });
     Cookie.set("reviva-username", username, { expires: 1 });
     Cookie.set("reviva-userid", userId, { expires: 1 });
@@ -59,7 +67,7 @@ function SignUp() {
     setIsLoginPage((prevState) => !prevState);
   };
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSignInStatus(status.loading);
     try {
@@ -77,14 +85,14 @@ function SignUp() {
         message: response.data.message,
       });
       setSignInStatus(status.success);
-    } catch (e) {
-      console.log("Error: ", e);
+    } catch (err : any) {
+      console.log("Error: ", err);
       setSignInStatus(status.failed);
-      setMsg(e.response.data.message);
+      setMsg(err.response.data.message);
     }
   };
 
-  const handleSignUp = async (e) => {
+  const handleSignUp = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSignInStatus(status.loading);
     try {
@@ -102,16 +110,16 @@ function SignUp() {
         userId: response.data.id,
         message: response.data.message,
       });
-    } catch (e) {
-      console.log("Error: ", e);
+    } catch (err : any) {
+      console.log("Error: ", err);
       setSignInStatus(status.failed);
-      setMsg(e.response.data.message);
+      setMsg(err.response.data.message);
     }
   };
 
-  const onChangeUsername = (e) => setUsername(e.target.value);
-  const onChangeEmail = (e) => setEmail(e.target.value);
-  const onChangePassword = (e) => setPassword(e.target.value);
+  const onChangeUsername = (e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value);
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
+  const onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
   return (
     <div className="container ">
